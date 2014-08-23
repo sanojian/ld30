@@ -17,13 +17,31 @@ var GameState = function(game) {
 // Load images and sounds
 GameState.prototype.preload = function() {
 	this.game.load.atlasJSONHash('allsprites', './images/spritesheet.png', null, g_spriteAtlas);
+	this.game.load.bitmapFont('pressStart2p', 'images/pressStart2p_0.png', 'images/pressStart2p.xml');
 
 };
 
 // Setup the example
 GameState.prototype.create = function() {
 
-	window.gfx = this.game.add.graphics(0, 0);
+	var graphicOverlay = new Phaser.Graphics(this.game, 0 , 0);
+	for (var y=0;y<g_defs.screen.height;y+=4) {
+		for (var x=0;x<g_defs.screen.width;x+=4) {
+			graphicOverlay.beginFill(0xffffff, 0.1);
+			graphicOverlay.drawRect(x, y, 3, 1);
+			graphicOverlay.drawRect(x, y+1, 1, 2);
+			graphicOverlay.endFill();
+			graphicOverlay.beginFill(0x000000, 0.1);
+			graphicOverlay.drawRect(x+1, y+3, 3, 1);
+			graphicOverlay.drawRect(x+3, y+1, 1, 2);
+			graphicOverlay.endFill();
+		}
+	}
+
+	this.overlay = this.game.add.image(0, 0, graphicOverlay.generateTexture());
+	//var style = { font: "12px 'Press Start 2P'", fill: "#ffffff", align: "center", stroke: "#ffffff", strokeThickness: 1};
+	this.game.gameText = this.game.add.bitmapText(g_defs.screen.width/2, g_defs.screen.height-128, 'pressStart2p', 'Hello there', 32);
+	this.game.gameText.tint = 0x005784;
 
 	window.bmd = this.game.add.bitmapData(g_defs.screen.width, g_defs.screen.height);
 	window.screenBmd = this.game.add.sprite(0, 0, window.bmd);
@@ -36,6 +54,7 @@ GameState.prototype.create = function() {
 GameState.prototype.update = function() {
 
 	window.bmd.clear();
+	this.overlay.bringToTop();
 
 	window.bmd.ctx.strokeStyle = "#ffffff";
 	// draw routes
@@ -96,9 +115,11 @@ GameState.prototype.update = function() {
 	g_game.frame++;
 };
 
-// Setup game
-var g_phaserGame = new Phaser.Game(g_defs.screen.width, g_defs.screen.height, Phaser.AUTO, 'game');
-g_phaserGame.state.add('game', GameState, true);
+window.onload = function () {
+	// Setup game
+	window.g_phaserGame = new Phaser.Game(g_defs.screen.width, g_defs.screen.height, Phaser.AUTO, 'game');
+	g_phaserGame.state.add('game', GameState, true);
+};
 
 var initTeam = function(team) {
 	g_game.teams[team] = { routePoints: [] };
@@ -107,19 +128,28 @@ var initTeam = function(team) {
 	}
 };
 
+function changeText(text) {
+	g_phaserGame.gameText.text = text;
+	g_phaserGame.gameText.x = (g_phaserGame.width / 2 - g_phaserGame.gameText.textWidth / 2);
+	g_phaserGame.gameText.x = g_phaserGame.gameText.x - g_phaserGame.gameText.x % g_defs.scale;
+
+}
+
 function loadLevel() {
 
 	//clearLevel();
 
-	if (!localStorage.planetary_level) {
-		localStorage.planetary_level = 1;
+	if (!localStorage.ld30_level) {
+		localStorage.ld30_level = 1;
 	}
-	g_game.level = g_levels[localStorage.planetary_level];
+	g_game.level = g_levels[localStorage.ld30_level];
+
+	changeText(g_game.level.text);
 
 	while (!g_game.level) {
-		localStorage.planetary_level = Math.max(1, parseInt(localStorage.planetary_level, 10) - 1);
-		console.log('down to ' + localStorage.planetary_level);
-		g_game.level = g_levels[localStorage.planetary_level];
+		localStorage.ld30_level = Math.max(1, parseInt(localStorage.ld30_level, 10) - 1);
+		console.log('down to ' + localStorage.ld30_level);
+		g_game.level = g_levels[localStorage.ld30_level];
 	}
 
 	for (var name in g_game.level.planets) {

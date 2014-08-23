@@ -4,13 +4,13 @@
 
 var g_levels = {
 	'1': {
-		planets: {	'A': { name: 'A', x: 200, y: 200, r: 26, team: 'team1' },
-			'B': { name: 'B', x: 300, y: 400, r: 24, team: 'team0' },
-			'C': { name: 'C', x: 400, y: 100, r: 24, team: 'team0' },
-			'D': { name: 'D', x: 450, y: 200, r: 24, team: 'team2' },
-			'E': { name: 'E', x: 550, y: 150, r: 24, team: 'team0' },
-			'F': { name: 'F', x: 650, y: 200, r: 24, team: 'team0' },
-			'G': { name: 'G', x: 750, y: 400, r: 24, team: 'team3' }
+		planets: {	'A': { name: 'A', x: 30, y: 30, team: 'team1' },
+			'B': { name: 'B', x: 80, y: 100, team: 'team0' },
+			'C': { name: 'C', x: 130, y: 30, team: 'team0' },
+			'D': { name: 'D', x: 150, y: 70, team: 'team2' },
+			'E': { name: 'E', x: 170, y: 50, team: 'team0' },
+			'F': { name: 'F', x: 180, y: 70, team: 'team0' },
+			'G': { name: 'G', x: 200, y: 130, team: 'team3' }
 
 		},
 		routes: [ 'A_B', 'B_C', 'C_D', 'C_E', 'E_F', 'F_G' ],
@@ -18,7 +18,8 @@ var g_levels = {
 			{ team: 'team1' },
 			{ team: 'team2' },
 			{ team: 'team3' }
-		]
+		],
+		text: 'Yeah level 1'
 	},
 	'2': {
 		planets: {	'A': { name: 'A', x: 200, y: 200, r: 26, team: 'team1' },
@@ -38,6 +39,7 @@ var g_levels = {
 };
 
 var g_defs = {
+	scale: 4,
 	screen: {
 		width: 1024,
 		height: 768

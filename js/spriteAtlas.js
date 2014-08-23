@@ -9,6 +9,14 @@ var g_spriteAtlas = {
 				"h": 8
 			}
 		},
+		overlay: {
+			"frame": {
+				"x": 8,
+				"y": 24,
+				"w": 4,
+				"h": 4
+			}
+		},
 		"planet_team0":{
 			"frame": {
 				"x": 0,

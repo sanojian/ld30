@@ -5,6 +5,8 @@
 var Fleet = function(team, planet1, planet2) {
 
 	var self = this;
+	self.x = g_game.planets[planet1].x;
+	self.y = g_game.planets[planet1].y;
 
 	var dx = g_game.planets[planet2].x - g_game.planets[planet1].x;
 	var dy = g_game.planets[planet2].y - g_game.planets[planet1].y;
@@ -24,12 +26,15 @@ var Fleet = function(team, planet1, planet2) {
 
 	var imgFleet = g_phaserGame.add.sprite(g_game.planets[planet1].x, g_game.planets[planet1].y, 'allsprites', 'fleet_' + team);
 	imgFleet.anchor.set(0.5);
-	imgFleet.scale.setTo(strength, strength);
+	var size = Math.max(g_defs.scale, strength);
+	imgFleet.scale.setTo(size, size);
 
 
 	self.tick = function(frame) {
-		imgFleet.x += speed * Math.cos(angle);
-		imgFleet.y += speed * Math.sin(angle);
+		self.x += speed * Math.cos(angle);
+		self.y += speed * Math.sin(angle);
+		imgFleet.x = self.x - self.x % g_defs.scale;
+		imgFleet.y = self.y - self.y % g_defs.scale;
 
 		travelled++;
 		if (travelled >= distance) {
