@@ -1,6 +1,22 @@
 var g_spriteAtlas = {
 	"frames": {
 
+		"boss_team2":{
+			"frame": {
+				"x": 0,
+				"y": 60,
+				"w": 16,
+				"h": 16
+			}
+		},
+		"boss_team3":{
+			"frame": {
+				"x": 0,
+				"y": 44,
+				"w": 16,
+				"h": 16
+			}
+		},
 		"shield":{
 			"frame": {
 				"x": 0,

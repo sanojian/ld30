@@ -17,7 +17,7 @@ var Planet = function(name, myX, myY, myTeam) {
 	var imgShield = g_phaserGame.add.sprite(this.x, this.y, 'allsprites', 'shield');
 	imgShield.visible = false;
 	imgShield.anchor.set(0.5);
-	imgShield.scale.setTo(3, 3);
+	imgShield.scale.setTo(g_defs.scale, g_defs.scale);
 
 	this.r = 9*imgPlanet.width/16;
 	this.orbit = new Phaser.Circle(this.x, this.y, this.r*2);
@@ -76,6 +76,13 @@ var Planet = function(name, myX, myY, myTeam) {
 	self.toggleShield = function() {
 		self.bShield = !self.bShield;
 		imgShield.visible = self.bShield;
+		if (self.bShield) {
+			g_game.sfx.shieldon.play();
+		}
+		else {
+			g_game.sfx.shieldoff.play();
+		}
+
 
 	};
 
@@ -97,6 +104,9 @@ var Planet = function(name, myX, myY, myTeam) {
 			if (self.population < 0) {
 				self.setTeam(attackingTeam);
 				self.population = Math.min(10, 0 - self.population);
+			}
+			else {
+				g_game.sfx.losefight.play();
 			}
 		}
 	};

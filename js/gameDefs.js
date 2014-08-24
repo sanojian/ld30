@@ -4,7 +4,8 @@
 
 var g_levels = {
 	'1': {
-		planets: {	'A': { name: 'A', x: 90, y: 50, team: 'team1' },
+		planets: {
+			'A': { name: 'A', x: 90, y: 50, team: 'team1' },
 			'B': { name: 'B', x: 130, y: 80, team: 'team0' }
 
 		},
@@ -12,16 +13,49 @@ var g_levels = {
 		players: [
 			{ team: 'team1' }
 		],
-		text: 'Yeah level 1'
+		text: 'Conquer the Unknown',
+		music: 'simplesong'
 	},
 	'2': {
-		planets: {	'A': { name: 'A', x: 30, y: 30, team: 'team1' },
+		planets: {
+			'A': { name: 'A', x: 80, y: 50, team: 'team2' },
+			'B': { name: 'B', x: 130, y: 80, team: 'team0' },
+			'C': { name: 'C', x: 160, y: 90, team: 'team1' }
+
+		},
+		routes: [ 'A_B', 'B_C' ],
+		players: [
+			{ team: 'team1' },
+			{ team: 'team2' }
+		],
+		text: 'A Nemesis',
+		music: 'team2'
+	},
+	'3': {
+		planets: {
+			'A': { name: 'A', x: 80, y: 40, team: 'team1' },
+			'B': { name: 'B', x: 110, y: 50, team: 'team0' },
+			'C': { name: 'C', x: 150, y: 90, team: 'team0' },
+			'D': { name: 'D', x: 180, y: 60, team: 'team3' }
+
+		},
+		routes: [ 'A_B', 'B_C', 'C_D' ],
+		players: [
+			{ team: 'team1' },
+			{ team: 'team3' }
+		],
+		text: 'Another Challenger',
+		music: 'team3'
+	},
+	'4': {
+		planets: {
+			'A': { name: 'A', x: 50, y: 50, team: 'team1' },
 			'B': { name: 'B', x: 80, y: 100, team: 'team0' },
 			'C': { name: 'C', x: 130, y: 30, team: 'team0' },
 			'D': { name: 'D', x: 150, y: 70, team: 'team2' },
 			'E': { name: 'E', x: 170, y: 50, team: 'team0' },
 			'F': { name: 'F', x: 180, y: 70, team: 'team0' },
-			'G': { name: 'G', x: 200, y: 130, team: 'team3' }
+			'G': { name: 'G', x: 200, y: 110, team: 'team3' }
 
 		},
 		routes: [ 'A_B', 'B_C', 'C_D', 'C_E', 'E_F', 'F_G' ],
@@ -31,29 +65,15 @@ var g_levels = {
 			{ team: 'team3' }
 		],
 		text: 'Level 2 go!!'
-	},
-	'3': {
-		planets: {	'A': { name: 'A', x: 200, y: 200, r: 26, team: 'team1' },
-			'B': { name: 'B', x: 300, y: 400, r: 24, team: 'team0' },
-			'C': { name: 'C', x: 400, y: 100, r: 24, team: 'team0' },
-			'D': { name: 'C', x: 450, y: 200, r: 24, team: 'team2' },
-			'E': { name: 'C', x: 250, y: 150, r: 24, team: 'team3' }
-
-		},
-		routes: [ 'A_B', 'B_C', 'C_D', 'C_E' ],
-		players: [
-			{ team: 'team1' },
-			{ team: 'team2' },
-			{ team: 'team3' }
-		]
 	}
+
 };
 
 var g_defs = {
 	scale: 4,
 	screen: {
 		width: 1024,
-		height: 768
+		height: 640
 	},
 	teams: {
 		team0: { color: '#9D9D9D' },

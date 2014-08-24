@@ -7,6 +7,7 @@ var Fleet = function(team, planet1, planet2) {
 	var self = this;
 	self.x = g_game.planets[planet1].x;
 	self.y = g_game.planets[planet1].y;
+	self.team = team;
 
 	var dx = g_game.planets[planet2].x - g_game.planets[planet1].x;
 	var dy = g_game.planets[planet2].y - g_game.planets[planet1].y;
@@ -23,6 +24,7 @@ var Fleet = function(team, planet1, planet2) {
 		g_game.planets[route[i]].population -= power;
 	}
 
+	g_game.sfx['launch_' + team].play();
 
 	//var imgFleet = g_phaserGame.add.sprite(g_game.planets[planet1].x, g_game.planets[planet1].y, 'allsprites', 'fleet_' + team);
 	var texName = 'texture_fleet_' + team + '_' + strength;

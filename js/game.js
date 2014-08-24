@@ -9,7 +9,9 @@ var g_game = {
 	teams: {},
 	fleets: [],
 	frame: 1,
-	bLoading: true
+	bLoading: true,
+	sfx: {},
+	music: null
 }
 
 var GameState = function(game) {
@@ -19,11 +21,28 @@ var GameState = function(game) {
 GameState.prototype.preload = function() {
 	this.game.load.atlasJSONHash('allsprites', './images/spritesheet.png', null, g_spriteAtlas);
 	this.game.load.bitmapFont('pressStart2p', 'images/pressStart2p_0.png', 'images/pressStart2p.xml');
+	this.game.load.audio('shieldon', ['./audio/sfx/shieldon.wav']);
+	this.game.load.audio('shieldoff', ['./audio/sfx/shieldoff.wav']);
+	this.game.load.audio('launch_team1', ['./audio/sfx/launch_team1.wav']);
+	this.game.load.audio('launch_team2', ['./audio/sfx/launch_team2.wav']);
+	this.game.load.audio('launch_team3', ['./audio/sfx/launch_team3.wav']);
+	this.game.load.audio('losefight', ['./audio/sfx/losefight.wav']);
+
+	this.game.load.audio('simplesong', ['./audio/music/simple.ogg']);
+	this.game.load.audio('team2', ['./audio/music/team2.ogg']);
+	this.game.load.audio('team3', ['./audio/music/team3.ogg']);
 
 };
 
 // Setup the example
 GameState.prototype.create = function() {
+
+	g_game.sfx.shieldon = this.game.add.audio('shieldon');
+	g_game.sfx.shieldoff = this.game.add.audio('shieldoff');
+	g_game.sfx.launch_team1 = this.game.add.audio('launch_team1');
+	g_game.sfx.launch_team2 = this.game.add.audio('launch_team2');
+	g_game.sfx.launch_team3 = this.game.add.audio('launch_team3');
+	g_game.sfx.losefight = this.game.add.audio('losefight');
 
 	var graphicOverlay = new Phaser.Graphics(this.game, 0 , 0);
 	for (var y=0;y<g_defs.screen.height;y+=4) {
@@ -39,25 +58,35 @@ GameState.prototype.create = function() {
 		}
 	}
 
-	this.overlay = this.game.add.image(0, 0, graphicOverlay.generateTexture());
+	this.overlay = this.game.add.image(-10, -10, graphicOverlay.generateTexture());
 	//var style = { font: "12px 'Press Start 2P'", fill: "#ffffff", align: "center", stroke: "#ffffff", strokeThickness: 1};
-	this.game.gameText = this.game.add.bitmapText(g_defs.screen.width/2, g_defs.screen.height-64, 'pressStart2p', 'Hello there', 32);
-	this.game.gameText.tint = 0x005784;
+	this.game.gameText = this.game.add.bitmapText(g_defs.screen.width/2, g_defs.screen.height-128, 'pressStart2p', 'Hello there', 32);
+	this.game.gameText.tint = 0x31A2F2;
 
-	this.game.victoryText = this.game.add.bitmapText(g_defs.screen.width-256, g_defs.screen.height-128, 'pressStart2p', 'NEXT->', 40);
-	this.game.victoryText.tint = 0xEB8931;
-	this.game.victoryText.visible = true;
-	this.game.restartText = this.game.add.bitmapText(64, g_defs.screen.height-128, 'pressStart2p', 'RESTART@', 40);
-	this.game.restartText.tint = 0xEB8931;
+	this.game.victoryText = this.game.add.bitmapText(g_defs.screen.width-256, g_defs.screen.height-64, 'pressStart2p', 'NEXT->', 32);
+	this.game.victoryText.tint = 0x005784;
+	this.game.victoryText.visible = false;
+	this.game.victoryText.inputEnabled = true;
+	this.game.victoryText.events.onInputDown.add(function() {
+		localStorage.ld30_level = parseInt(localStorage.ld30_level, 10) + 1;
+		loadLevel();
+	});
+	this.game.restartText = this.game.add.bitmapText(64, g_defs.screen.height-64, 'pressStart2p', 'RESTART', 32);
+	this.game.restartText.tint = 0x005784;
 	this.game.restartText.visible = true;
 	this.game.restartText.inputEnabled = true;
 	this.game.restartText.events.onInputDown.add(function() {
-		localStorage.ld30_level = Math.min(2, localStorage.ld30_level + 1);
 		loadLevel();
 	});
 
 	window.bmd = this.game.add.bitmapData(g_defs.screen.width, g_defs.screen.height);
 	window.screenBmd = this.game.add.sprite(0, 0, window.bmd);
+
+	this.game.boss_team2 = this.game.add.sprite(g_defs.scale*2, g_defs.scale*2, 'allsprites', 'boss_team2');
+	this.game.boss_team2.scale.setTo(g_defs.scale*2, g_defs.scale*2);
+	this.game.boss_team3 = this.game.add.sprite(g_defs.screen.width-128 - g_defs.scale*2, g_defs.scale*2, 'allsprites', 'boss_team3');
+	this.game.boss_team3.scale.setTo(g_defs.scale*2, g_defs.scale*2);
+
 
 	this.game.stage.smoothed = false;
 	loadLevel();
@@ -145,11 +174,12 @@ GameState.prototype.update = function() {
 
 	// check for victory or loss
 	if (!friends) {
-		doLoss();
+		changeText('You are defeated...');
 	}
 	else if (!enemies) {
 		// victory
-		changeText('Victory!');
+		changeText('Victory!!');
+		this.game.victoryText.visible = true;
 	}
 
 	g_game.frame++;
@@ -187,6 +217,7 @@ function clearLevel() {
 	g_game.planets = {};
 	g_game.teams = {};
 	g_game.frame = 1;
+	g_phaserGame.victoryText.visible = false;
 };
 
 function loadLevel() {
@@ -198,13 +229,13 @@ function loadLevel() {
 	}
 	g_game.level = g_levels[localStorage.ld30_level];
 
-	changeText(g_game.level.text);
-
 	while (!g_game.level) {
 		localStorage.ld30_level = Math.max(1, parseInt(localStorage.ld30_level, 10) - 1);
 		console.log('down to ' + localStorage.ld30_level);
 		g_game.level = g_levels[localStorage.ld30_level];
 	}
+
+	changeText(g_game.level.text);
 
 	for (var name in g_game.level.planets) {
 		g_game.planets[name] = new Planet(name, g_game.level.planets[name].x, g_game.level.planets[name].y,
@@ -216,6 +247,23 @@ function loadLevel() {
 	}
 	for (var i=0;i<g_game.level.players.length;i++) {
 		initTeam(g_game.level.players[i].team);
+	}
+
+	g_phaserGame.boss_team2.visible = false;
+	g_phaserGame.boss_team3.visible = false;
+	for (var i=0;i<g_game.level.players.length;i++) {
+		if (g_game.level.players[i].team != 'team1') {
+			g_phaserGame['boss_' + g_game.level.players[i].team].visible = true;
+		}
+	}
+
+	if (g_game.music) {
+		g_game.music.stop();
+	}
+	g_game.music = g_phaserGame.add.audio(g_game.level.music);
+	if (g_game.music) {
+		g_game.music.loop = true;
+		g_game.music.play();
 	}
 
 	g_game.bLoading = false;
