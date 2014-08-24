@@ -8,6 +8,17 @@ var PlayerAI = function(myTeam) {
 	self.move = function() {
 		g_game.teams[self.team].routePoints = [];
 
+		var mood = Math.random();
+		if (mood < 0.2) {
+			g_phaserGame['boss_' + myTeam].loadTexture('allsprites', 'boss_' + myTeam + '_alt1');
+		}
+		else if (mood < 0.4) {
+			g_phaserGame['boss_' + myTeam].loadTexture('allsprites', 'boss_' + myTeam + '_alt2');
+		}
+		else {
+			g_phaserGame['boss_' + myTeam].loadTexture('allsprites', 'boss_' + myTeam);
+		}
+
 		for (var i in g_game.planets) {
 			// look for my planets
 			if (g_game.planets[i] && g_game.planets[i].team == self.team) {

@@ -13,7 +13,7 @@ var g_levels = {
 		players: [
 			{ team: 'team1' }
 		],
-		text: 'Conquer the Unknown',
+		text: 'Origins - Drag to Conquer',
 		music: 'simplesong'
 	},
 	'2': {
@@ -64,7 +64,8 @@ var g_levels = {
 			{ team: 'team2' },
 			{ team: 'team3' }
 		],
-		text: 'Level 2 go!!'
+		text: 'The Final Test',
+		music: 'final'
 	}
 
 };

@@ -9,9 +9,41 @@ var g_spriteAtlas = {
 				"h": 16
 			}
 		},
+		"boss_team2_alt1":{
+			"frame": {
+				"x": 16,
+				"y": 60,
+				"w": 16,
+				"h": 16
+			}
+		},
+		"boss_team2_alt2":{
+			"frame": {
+				"x": 32,
+				"y": 60,
+				"w": 16,
+				"h": 16
+			}
+		},
 		"boss_team3":{
 			"frame": {
 				"x": 0,
+				"y": 44,
+				"w": 16,
+				"h": 16
+			}
+		},
+		"boss_team3_alt1":{
+			"frame": {
+				"x": 16,
+				"y": 44,
+				"w": 16,
+				"h": 16
+			}
+		},
+		"boss_team3_alt2":{
+			"frame": {
+				"x": 32,
 				"y": 44,
 				"w": 16,
 				"h": 16

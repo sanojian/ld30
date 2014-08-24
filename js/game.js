@@ -31,64 +31,82 @@ GameState.prototype.preload = function() {
 	this.game.load.audio('simplesong', ['./audio/music/simple.ogg']);
 	this.game.load.audio('team2', ['./audio/music/team2.ogg']);
 	this.game.load.audio('team3', ['./audio/music/team3.ogg']);
+	this.game.load.audio('final', ['./audio/music/final.ogg']);
 
 };
 
 // Setup the example
 GameState.prototype.create = function() {
 
-	g_game.sfx.shieldon = this.game.add.audio('shieldon');
-	g_game.sfx.shieldoff = this.game.add.audio('shieldoff');
-	g_game.sfx.launch_team1 = this.game.add.audio('launch_team1');
-	g_game.sfx.launch_team2 = this.game.add.audio('launch_team2');
-	g_game.sfx.launch_team3 = this.game.add.audio('launch_team3');
-	g_game.sfx.losefight = this.game.add.audio('losefight');
+	this.game.gameText = this.game.add.bitmapText(g_defs.screen.width / 2, g_defs.screen.height - 128, 'pressStart2p', 'Loading...', 32);
+	this.game.gameText.tint = 0x31A2F2;
+	changeText('Loading...');
 
-	var graphicOverlay = new Phaser.Graphics(this.game, 0 , 0);
-	for (var y=0;y<g_defs.screen.height;y+=4) {
-		for (var x=0;x<g_defs.screen.width;x+=4) {
+	var titleText = this.game.add.bitmapText(g_defs.screen.width / 2, 32, 'pressStart2p', 'Stellar', 48);
+	titleText.tint = 0xF7E26B;
+	changeText('Stellar', titleText);
+
+	var graphicOverlay = new Phaser.Graphics(this.game, 0, 0);
+	for (var y = 0; y < g_defs.screen.height; y += 4) {
+		for (var x = 0; x < g_defs.screen.width; x += 4) {
 			graphicOverlay.beginFill(0xffffff, 0.1);
 			graphicOverlay.drawRect(x, y, 3, 1);
-			graphicOverlay.drawRect(x, y+1, 1, 2);
+			graphicOverlay.drawRect(x, y + 1, 1, 2);
 			graphicOverlay.endFill();
 			graphicOverlay.beginFill(0x000000, 0.1);
-			graphicOverlay.drawRect(x+1, y+3, 3, 1);
-			graphicOverlay.drawRect(x+3, y+1, 1, 2);
+			graphicOverlay.drawRect(x + 1, y + 3, 3, 1);
+			graphicOverlay.drawRect(x + 3, y + 1, 1, 2);
 			graphicOverlay.endFill();
 		}
 	}
 
 	this.overlay = this.game.add.image(-10, -10, graphicOverlay.generateTexture());
-	//var style = { font: "12px 'Press Start 2P'", fill: "#ffffff", align: "center", stroke: "#ffffff", strokeThickness: 1};
-	this.game.gameText = this.game.add.bitmapText(g_defs.screen.width/2, g_defs.screen.height-128, 'pressStart2p', 'Hello there', 32);
-	this.game.gameText.tint = 0x31A2F2;
 
-	this.game.victoryText = this.game.add.bitmapText(g_defs.screen.width-256, g_defs.screen.height-64, 'pressStart2p', 'NEXT->', 32);
-	this.game.victoryText.tint = 0x005784;
-	this.game.victoryText.visible = false;
-	this.game.victoryText.inputEnabled = true;
-	this.game.victoryText.events.onInputDown.add(function() {
+	//	You can listen for each of these events from Phaser.Loader
+	//this.game.load.onFileComplete.add(fileComplete, this);
+	this.game.load.onLoadComplete.add(loadComplete, this);
+	this.game.load.start()
+	//loadComplete();
+};
+
+function loadComplete() {
+	g_game.sfx.shieldon = g_phaserGame.add.audio('shieldon');
+	g_game.sfx.shieldoff = g_phaserGame.add.audio('shieldoff');
+	g_game.sfx.launch_team1 = g_phaserGame.add.audio('launch_team1');
+	g_game.sfx.launch_team2 = g_phaserGame.add.audio('launch_team2');
+	g_game.sfx.launch_team3 = g_phaserGame.add.audio('launch_team3');
+	g_game.sfx.losefight = g_phaserGame.add.audio('losefight');
+
+	//var style = { font: "12px 'Press Start 2P'", fill: "#ffffff", align: "center", stroke: "#ffffff", strokeThickness: 1};
+	//g_phaserGame.gameText = g_phaserGame.add.bitmapText(g_defs.screen.width/2, g_defs.screen.height-128, 'pressStart2p', 'Hello there', 32);
+	//g_phaserGame.gameText.tint = 0x31A2F2;
+
+	g_phaserGame.victoryText = g_phaserGame.add.bitmapText(g_defs.screen.width-256, g_defs.screen.height-64, 'pressStart2p', 'NEXT->', 32);
+	g_phaserGame.victoryText.tint = 0x005784;
+	g_phaserGame.victoryText.visible = false;
+	g_phaserGame.victoryText.inputEnabled = true;
+	g_phaserGame.victoryText.events.onInputDown.add(function() {
 		localStorage.ld30_level = parseInt(localStorage.ld30_level, 10) + 1;
 		loadLevel();
 	});
-	this.game.restartText = this.game.add.bitmapText(64, g_defs.screen.height-64, 'pressStart2p', 'RESTART', 32);
-	this.game.restartText.tint = 0x005784;
-	this.game.restartText.visible = true;
-	this.game.restartText.inputEnabled = true;
-	this.game.restartText.events.onInputDown.add(function() {
+	g_phaserGame.restartText = g_phaserGame.add.bitmapText(64, g_defs.screen.height-64, 'pressStart2p', 'RESTART', 32);
+	g_phaserGame.restartText.tint = 0x005784;
+	g_phaserGame.restartText.visible = true;
+	g_phaserGame.restartText.inputEnabled = true;
+	g_phaserGame.restartText.events.onInputDown.add(function() {
 		loadLevel();
 	});
 
-	window.bmd = this.game.add.bitmapData(g_defs.screen.width, g_defs.screen.height);
-	window.screenBmd = this.game.add.sprite(0, 0, window.bmd);
+	window.bmd = g_phaserGame.add.bitmapData(g_defs.screen.width, g_defs.screen.height);
+	window.screenBmd = g_phaserGame.add.sprite(0, 0, window.bmd);
 
-	this.game.boss_team2 = this.game.add.sprite(g_defs.scale*2, g_defs.scale*2, 'allsprites', 'boss_team2');
-	this.game.boss_team2.scale.setTo(g_defs.scale*2, g_defs.scale*2);
-	this.game.boss_team3 = this.game.add.sprite(g_defs.screen.width-128 - g_defs.scale*2, g_defs.scale*2, 'allsprites', 'boss_team3');
-	this.game.boss_team3.scale.setTo(g_defs.scale*2, g_defs.scale*2);
+	g_phaserGame.boss_team2 = g_phaserGame.add.sprite(g_defs.scale*2, g_defs.scale*2, 'allsprites', 'boss_team2');
+	g_phaserGame.boss_team2.scale.setTo(g_defs.scale*2, g_defs.scale*2);
+	g_phaserGame.boss_team3 = g_phaserGame.add.sprite(g_defs.screen.width-128 - g_defs.scale*2, g_defs.scale*2, 'allsprites', 'boss_team3');
+	g_phaserGame.boss_team3.scale.setTo(g_defs.scale*2, g_defs.scale*2);
 
 
-	this.game.stage.smoothed = false;
+	g_phaserGame.stage.smoothed = false;
 	loadLevel();
 
 };
@@ -198,10 +216,15 @@ var initTeam = function(team) {
 	}
 };
 
-function changeText(text) {
-	g_phaserGame.gameText.text = text;
-	g_phaserGame.gameText.x = (g_phaserGame.width / 2 - g_phaserGame.gameText.textWidth / 2);
-	g_phaserGame.gameText.x = g_phaserGame.gameText.x - g_phaserGame.gameText.x % g_defs.scale;
+function changeText(text, textObj) {
+
+	var textToChange = textObj || g_phaserGame.gameText;
+
+	textToChange.text = text;
+	setTimeout(function() {
+		textToChange.x = (g_phaserGame.width / 2 - g_phaserGame.gameText.textWidth / 2);
+		textToChange.x = textToChange.x - textToChange.x % g_defs.scale;
+	}, 200);
 
 }
 
