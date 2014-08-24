@@ -28,10 +28,10 @@ GameState.prototype.preload = function() {
 	this.game.load.audio('launch_team3', ['./audio/sfx/launch_team3.wav']);
 	this.game.load.audio('losefight', ['./audio/sfx/losefight.wav']);
 
-	this.game.load.audio('simplesong', ['./audio/music/simple.ogg']);
-	this.game.load.audio('team2', ['./audio/music/team2.ogg']);
-	this.game.load.audio('team3', ['./audio/music/team3.ogg']);
-	this.game.load.audio('final', ['./audio/music/final.ogg']);
+	this.game.load.audio('simplesong', ['https://dl.dropboxusercontent.com/u/102070389/games/ld30/simple.OGG']);
+	this.game.load.audio('team2', ['https://dl.dropboxusercontent.com/u/102070389/games/ld30/team2.OGG']);
+	this.game.load.audio('team3', ['https://dl.dropboxusercontent.com/u/102070389/games/ld30/team3.OGG']);
+	this.game.load.audio('final', ['https://dl.dropboxusercontent.com/u/102070389/games/ld30/final.OGG']);
 
 };
 
