@@ -4,6 +4,17 @@
 
 var g_levels = {
 	'1': {
+		planets: {	'A': { name: 'A', x: 90, y: 50, team: 'team1' },
+			'B': { name: 'B', x: 130, y: 80, team: 'team0' }
+
+		},
+		routes: [ 'A_B' ],
+		players: [
+			{ team: 'team1' }
+		],
+		text: 'Yeah level 1'
+	},
+	'2': {
 		planets: {	'A': { name: 'A', x: 30, y: 30, team: 'team1' },
 			'B': { name: 'B', x: 80, y: 100, team: 'team0' },
 			'C': { name: 'C', x: 130, y: 30, team: 'team0' },
@@ -19,9 +30,9 @@ var g_levels = {
 			{ team: 'team2' },
 			{ team: 'team3' }
 		],
-		text: 'Yeah level 1'
+		text: 'Level 2 go!!'
 	},
-	'2': {
+	'3': {
 		planets: {	'A': { name: 'A', x: 200, y: 200, r: 26, team: 'team1' },
 			'B': { name: 'B', x: 300, y: 400, r: 24, team: 'team0' },
 			'C': { name: 'C', x: 400, y: 100, r: 24, team: 'team0' },

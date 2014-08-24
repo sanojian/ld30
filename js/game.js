@@ -8,7 +8,8 @@ var g_game = {
 	routes: {},
 	teams: {},
 	fleets: [],
-	frame: 1
+	frame: 1,
+	bLoading: true
 }
 
 var GameState = function(game) {
@@ -40,8 +41,20 @@ GameState.prototype.create = function() {
 
 	this.overlay = this.game.add.image(0, 0, graphicOverlay.generateTexture());
 	//var style = { font: "12px 'Press Start 2P'", fill: "#ffffff", align: "center", stroke: "#ffffff", strokeThickness: 1};
-	this.game.gameText = this.game.add.bitmapText(g_defs.screen.width/2, g_defs.screen.height-128, 'pressStart2p', 'Hello there', 32);
+	this.game.gameText = this.game.add.bitmapText(g_defs.screen.width/2, g_defs.screen.height-64, 'pressStart2p', 'Hello there', 32);
 	this.game.gameText.tint = 0x005784;
+
+	this.game.victoryText = this.game.add.bitmapText(g_defs.screen.width-256, g_defs.screen.height-128, 'pressStart2p', 'NEXT->', 40);
+	this.game.victoryText.tint = 0xEB8931;
+	this.game.victoryText.visible = true;
+	this.game.restartText = this.game.add.bitmapText(64, g_defs.screen.height-128, 'pressStart2p', 'RESTART@', 40);
+	this.game.restartText.tint = 0xEB8931;
+	this.game.restartText.visible = true;
+	this.game.restartText.inputEnabled = true;
+	this.game.restartText.events.onInputDown.add(function() {
+		localStorage.ld30_level = Math.min(2, localStorage.ld30_level + 1);
+		loadLevel();
+	});
 
 	window.bmd = this.game.add.bitmapData(g_defs.screen.width, g_defs.screen.height);
 	window.screenBmd = this.game.add.sprite(0, 0, window.bmd);
@@ -53,8 +66,14 @@ GameState.prototype.create = function() {
 
 GameState.prototype.update = function() {
 
+	if (g_game.bLoading) {
+		return;
+	}
 	window.bmd.clear();
 	this.overlay.bringToTop();
+
+	var enemies = 0;
+	var friends = 0;
 
 	window.bmd.ctx.strokeStyle = "#ffffff";
 	// draw routes
@@ -81,14 +100,26 @@ GameState.prototype.update = function() {
 		window.bmd.ctx.closePath();
 	}
 
-	for (var i=0;i<g_game.fleets.length;i++) {
+	for (var i=g_game.fleets.length-1;i>=0;i--) {
 		g_game.fleets[i].tick(g_game.frame);
+		if (g_game.fleets[i] && g_game.fleets[i].team == 'team1') {
+			friends++;
+		}
+		else {
+			enemies++;
+		}
 	}
 
-		// draw planet strength
+	// draw planet strength
 	for (var key in g_game.planets) {
 
 		g_game.planets[key].tick(g_game.frame);
+		if (g_game.planets[key].team == 'team1') {
+			friends++;
+		}
+		else {
+			enemies++;
+		}
 
 		window.bmd.ctx.strokeStyle = g_defs.teams[g_game.planets[key].team].color;
 
@@ -111,6 +142,15 @@ GameState.prototype.update = function() {
 
 	window.bmd.render();
 	window.bmd.refreshBuffer();
+
+	// check for victory or loss
+	if (!friends) {
+		doLoss();
+	}
+	else if (!enemies) {
+		// victory
+		changeText('Victory!');
+	}
 
 	g_game.frame++;
 };
@@ -135,10 +175,24 @@ function changeText(text) {
 
 }
 
+function clearLevel() {
+	for (var i=g_game.fleets.length-1;i>=0;i--) {
+		g_game.fleets[i].destroy();
+	}
+	g_game.fleets = [];
+
+	for (var key in g_game.planets) {
+		g_game.planets[key].destroy();
+	}
+	g_game.planets = {};
+	g_game.teams = {};
+	g_game.frame = 1;
+};
+
 function loadLevel() {
 
-	//clearLevel();
-
+	g_game.bLoading = true;
+	clearLevel();
 	if (!localStorage.ld30_level) {
 		localStorage.ld30_level = 1;
 	}
@@ -164,4 +218,5 @@ function loadLevel() {
 		initTeam(g_game.level.players[i].team);
 	}
 
+	g_game.bLoading = false;
 };

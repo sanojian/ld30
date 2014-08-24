@@ -24,24 +24,40 @@ var Fleet = function(team, planet1, planet2) {
 	}
 
 
-	var imgFleet = g_phaserGame.add.sprite(g_game.planets[planet1].x, g_game.planets[planet1].y, 'allsprites', 'fleet_' + team);
+	//var imgFleet = g_phaserGame.add.sprite(g_game.planets[planet1].x, g_game.planets[planet1].y, 'allsprites', 'fleet_' + team);
+	var texName = 'texture_fleet_' + team + '_' + strength;
+	if (!g_phaserGame[texName]) {
+		var img = g_phaserGame.make.image(0, 0, 'allsprites', 'fleet_' + team);
+		g_phaserGame[texName] = g_phaserGame.add.renderTexture(img.width + (img.width-2)*strength, img.height, texName, true);
+		g_phaserGame[texName].renderXY(img, 0, 0, true);
+		for (var i=1;i<strength;i++){
+			g_phaserGame[texName].renderXY(img, (img.width-2)*i, 0, false);
+		}
+
+	}
+	var imgFleet = g_phaserGame.add.sprite(g_game.planets[planet1].x, g_game.planets[planet1].y, g_phaserGame[texName]);
+
 	imgFleet.anchor.set(0.5);
-	var size = Math.max(g_defs.scale, strength);
-	imgFleet.scale.setTo(size, size);
+	//var size = Math.max(g_defs.scale, strength);
+	imgFleet.scale.setTo(g_defs.scale, g_defs.scale);
 
 
 	self.tick = function(frame) {
-		self.x += speed * Math.cos(angle);
-		self.y += speed * Math.sin(angle);
-		imgFleet.x = self.x - self.x % g_defs.scale;
-		imgFleet.y = self.y - self.y % g_defs.scale;
+		imgFleet.x += speed * Math.cos(angle);
+		imgFleet.y += speed * Math.sin(angle);
+		//imgFleet.x = self.x - self.x % g_defs.scale;
+		//imgFleet.y = self.y - self.y % g_defs.scale;
 
 		travelled++;
 		if (travelled >= distance) {
-			g_game.fleets.splice(g_game.fleets.indexOf(self), 1);
-			imgFleet.destroy();
+			self.destroy();
 			g_game.planets[planet2].attackedBy(team, strength);
 		}
+	};
+
+	self.destroy = function() {
+		g_game.fleets.splice(g_game.fleets.indexOf(self), 1);
+		imgFleet.destroy();
 	};
 
 	return this;

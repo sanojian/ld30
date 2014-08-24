@@ -109,5 +109,10 @@ var Planet = function(name, myX, myY, myTeam) {
 		}
 	};
 
+	self.destroy = function() {
+		imgPlanet.destroy();
+		imgShield.destroy();
+	};
+
 	return this;
 };

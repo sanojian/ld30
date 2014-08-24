@@ -4,9 +4,33 @@ var g_spriteAtlas = {
 		"shield":{
 			"frame": {
 				"x": 0,
+				"y": 32,
+				"w": 12,
+				"h": 12
+			}
+		},
+		"fleet_team1":{
+			"frame": {
+				"x": 8,
 				"y": 24,
-				"w": 8,
-				"h": 8
+				"w": 6,
+				"h": 6
+			}
+		},
+		"fleet_team2":{
+			"frame": {
+				"x": 14,
+				"y": 24,
+				"w": 6,
+				"h": 6
+			}
+		},
+		"fleet_team3":{
+			"frame": {
+				"x": 20,
+				"y": 24,
+				"w": 6,
+				"h": 6
 			}
 		},
 		overlay: {
@@ -47,30 +71,6 @@ var g_spriteAtlas = {
 				"y": 0,
 				"w": 16,
 				"h": 16
-			}
-		},
-		"fleet_team1":{
-			"frame": {
-				"x": 0,
-				"y": 16,
-				"w": 8,
-				"h": 8
-			}
-		},
-		"fleet_team2":{
-			"frame": {
-				"x": 8,
-				"y": 16,
-				"w": 8,
-				"h": 8
-			}
-		},
-		"fleet_team3":{
-			"frame": {
-				"x": 16,
-				"y": 16,
-				"w": 8,
-				"h": 8
 			}
 		}
 	},
