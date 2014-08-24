@@ -38,6 +38,10 @@ GameState.prototype.preload = function() {
 // Setup the example
 GameState.prototype.create = function() {
 
+	this.game.scale.pageAlignHorizontally = true;
+	this.game.scale.pageAlignVertically = true;
+	this.game.scale.refresh();
+
 	this.game.gameText = this.game.add.bitmapText(g_defs.screen.width / 2, g_defs.screen.height - 128, 'pressStart2p', 'Loading...', 32);
 	this.game.gameText.tint = 0x31A2F2;
 	changeText('Loading...');
