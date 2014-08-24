@@ -19,6 +19,14 @@ var GameState = function(game) {
 
 // Load images and sounds
 GameState.prototype.preload = function() {
+
+	this.game.scale.pageAlignHorizontally = true;
+	this.game.scale.pageAlignVertically = true;
+	this.game.scale.refresh();
+
+	this.game.preloadBar = this.add.sprite((g_defs.screen.width / 2) - 128, g_defs.screen.height/2, 'preloaderBar');
+	this.game.load.setPreloadSprite(this.game.preloadBar);
+
 	this.game.load.atlasJSONHash('allsprites', './images/spritesheet.png', null, g_spriteAtlas);
 	this.game.load.bitmapFont('pressStart2p', 'images/pressStart2p_0.png', 'images/pressStart2p.xml');
 	this.game.load.audio('shieldon', ['./audio/sfx/shieldon.wav']);
@@ -38,9 +46,7 @@ GameState.prototype.preload = function() {
 // Setup the example
 GameState.prototype.create = function() {
 
-	this.game.scale.pageAlignHorizontally = true;
-	this.game.scale.pageAlignVertically = true;
-	this.game.scale.refresh();
+	this.game.preloadBar.visible = false;
 
 	this.game.gameText = this.game.add.bitmapText(g_defs.screen.width / 2, g_defs.screen.height - 128, 'pressStart2p', 'Loading...', 32);
 	this.game.gameText.tint = 0x31A2F2;
@@ -68,9 +74,9 @@ GameState.prototype.create = function() {
 
 	//	You can listen for each of these events from Phaser.Loader
 	//this.game.load.onFileComplete.add(fileComplete, this);
-	this.game.load.onLoadComplete.add(loadComplete, this);
-	this.game.load.start()
-	//loadComplete();
+	//this.game.load.onLoadComplete.add(loadComplete, this);
+	//this.game.load.start()
+	loadComplete();
 };
 
 function loadComplete() {
@@ -208,9 +214,28 @@ GameState.prototype.update = function() {
 };
 
 window.onload = function () {
+
+	var Boot = function(game) {};
+	Boot.prototype = {
+		preload: function() {
+			this.load.image('preloaderBar', 'images/loading-bar.png');
+
+		},
+		create: function() {
+			//this.input.maxPointers = 1;
+			//this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+			this.scale.pageAlignHorizontally = true;
+			this.scale.pageAlignVertically = true;
+			//this.scale.setScreenSize(true);
+			this.state.start('game');
+		}
+	};
+
 	// Setup game
 	window.g_phaserGame = new Phaser.Game(g_defs.screen.width, g_defs.screen.height, Phaser.AUTO, 'game');
-	g_phaserGame.state.add('game', GameState, true);
+	g_phaserGame.state.add('Boot', Boot);
+	g_phaserGame.state.add('game', GameState);
+	g_phaserGame.state.start('Boot');
 };
 
 var initTeam = function(team) {
